@@ -1,0 +1,4 @@
+# REST API Requirements
+# I wanted to keep the application lightweight given it's simplicity.
+
+Flask==3.0.3

@@ -1,0 +1,14 @@
+version: '3.0'
+
+# Example of simple docker-compose to run the application inside of a container.
+services:
+  api:
+    build: .
+    container_name: rest-api
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - FLASK_ENV=production  # Set to production although it should not be used as a production server (use WSGI)
+    volumes:
+      - ./app:/app 
