@@ -63,7 +63,7 @@ In this section I will describe how I would deploy such an application in a prod
 
 Firstly, for such a task where there is only one primary function I believe creating a docker container isn't necessary. Although it is a great way of hosting the REST API a serverless approach, e.g. single lambda function or Azure function, might be more appropriate given the simplicity. You could argue the same point for a API Gateway or API management plane that points to only one function as well, but by just having a lambda function it would reduce the complexity of deployment and dependancies on docker (runtime, container repository etc). 
 
-Because the document asked for details on containerization I have included a basic docker-compose.yml file which could be used to host the application. Since the application does have many depandancies a base python image can be used and depending on was application service is used (e.g. flask) it can be installed via the requirements.txt file. For a small application like this I would want to keep the amount of dependancies to a minimum so that there is less management involved (e.g. updates or package vulnerabilities).
+Because the document asked for details on containerization I have included a basic docker-compose.yml file which could be used to deploy the application. Since the application does have many depandancies a base python image can be used and depending on was application service is used (e.g. flask) it can be installed via the requirements.txt file. For a small application like this I would want to keep the amount of dependancies to a minimum so that there is less management involved (e.g. updates or package vulnerabilities). In the CICD section I have mentioned environment variables inside of the docker compose file. 
 
 The docker image could then be hosted in a cloud repository such as ECS or Azure Container Apps.
 
@@ -79,13 +79,15 @@ Cloud resources would be specified in CloudFormation templates, which would be s
 
 ## Docker
 
-I would follow the same branch-based deployment scheme above. Bitbucket Pipelines or Azure DevOps would be a suitable choice for deploying the CICD pipelines. Both would involve building and pushing the Docker image to a container repository. From there, other resources could be deployed to host the Docker-based application, such as AWS Fargate or AKS Ingress.
+I would follow the same branch-based deployment scheme above. Bitbucket Pipelines or Azure DevOps would be a suitable choice for deploying the CICD pipelines. Both would involve building and pushing the Docker image to a container repository. From there, other resources could be deployed to host the Docker-based application, such as AWS Fargate or AKS Ingress. For the Docker deployment, ensure that mechanisms are in place for managing environment-specific configuration, such as using environment variables. This allows for customization of settings (e.g. database connection strings) for different environments (development, uat, production) without the need to modify the application code.
 
 ### Logging and Monitoring
 
-Logging: Implement logging throughout your codebase using Python's "logging" module or Flask's built-in logging capabilities. Configure log levels, formats, and destinations to capture relevant information about application events, errors, and performance metrics. Since the applications features are limitted I would only log input (n) and error output. Since you know the input and if the function is successful there is no need to log the fibonacci numbers themselves. This is because it could expose you to large log storage files. Store logs centrally in services like AWS CloudWatch or Azure Monitor for analysis. 
+Logging: Implement logging throughout your codebase using Python's "logging" module or Flask's built-in logging capabilities. Configure log levels, formats, and destinations to capture relevant information about application events, errors, and performance metrics. Since the applications features are limitted I would only log input (n) and error output. Since you know the input and if the function is successful there is no need to log the fibonacci numbers themselves. This is because it could expose you to large log storage files. Store logs centrally in services like AWS CloudWatch or Elasticsearch for analysis.
 
-Monitoring: Utilize services like AWS CloudWatch or Azure Monitor to monitor the health, performance, and availability of your application. Set up alarms and notifications for critical metrics such as response times, error rates, and resource utilization to proactively detect and address issues.
+Monitoring: Utilize managed services like AWS CloudWatch or Azure Monitor to monitor the health, performance, and availability of your application. Set up alarms and notifications for critical metrics such as response times, error rates, and resource utilization to proactively detect and address issues. 
+
+Prometheus, Grafana, ELK stack (Elasticsearch, Logstash, Kibana) are excellent open-source or enterprise options for monitoring and logging services. While these services are powerful and I have been utilized for large-scale enterprise deployments, they may be considered overkill for this small application, even in a production environment. Given the limited amount of logs produced by the application, the effort required to set up and manage these hands-on services may not be justified.
 
 ### Scalability
 
