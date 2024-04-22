@@ -10,7 +10,7 @@ The REST API can be reached via the paths "/" or "/fibonacci".
 This being a REST API I wanted to keep the function code as simple as possible. 
 I did not use recursion for the fibonacci function as it could lead to performance issues and use unecessary resource useage (memory) once deployed. 
 
-I used flask as it is a simple way of hosting an application but it is not suitable for production deployment and would need more refinement.
+I used flask as it is a simple way of hosting an application but it is not suitable when considering a production deployment and would need more refinement.
 
 ## How to Run in Flask
 To run the Fibonacci REST API locally using Flask, follow these steps:
@@ -61,7 +61,7 @@ In this section I will describe how I would deploy such an application in a prod
 
 ### Containerization / Lambda
 
-Firstly, for such a task where there is only one primary function I believe creating a docker container isn't necessary. Although it is a great way of hosting the REST API a serverless approach, e.g. single lambda function or Azure function, might be more appropriate given the simplicity. You could argue the same point for a API Gateway or API management plane that points to only one function as well, but by just having a lambda function it would reduce the complexity of deployment and dependancies on docker (runtime, container repository etc). 
+Firstly, for such a task where there is only one primary function I believe creating a docker container isn't necessary. Although Docker is a great way of hosting the REST API, a serverless approach, e.g. single lambda function or Azure function, might be more appropriate given it's simplicity. You could argue the same point for a API Gateway or API management plane that points to only one function as well, but by just having a lambda function it would reduce the complexity of deployment and dependancies on docker (runtime, container repository etc). 
 
 Because the document asked for details on containerization I have included a basic docker-compose.yml file which could be used to deploy the application. Since the application does have many depandancies a base python image can be used and depending on was application service is used (e.g. flask) it can be installed via the requirements.txt file. For a small application like this I would want to keep the amount of dependancies to a minimum so that there is less management involved (e.g. updates or package vulnerabilities). In the CICD section I have mentioned environment variables inside of the docker compose file. 
 
